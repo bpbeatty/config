@@ -11,7 +11,7 @@ BuildArch:      noarch
 
 Source0:        bpbeatty-signing.tar.gz
 
-%global sub_name %{lua:t=string.gsub(rpm.expand("%{NAME}"), "^bpbeatty-", ""); print(t)}
+%global sub_name %{lua:t=string.gsub(rpm.expand("%{NAME}"), "^bpbeatty%-", ""); print(t)}
 
 %description
 Adds files and keys for signing Universal Blue images
