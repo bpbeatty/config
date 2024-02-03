@@ -1,17 +1,17 @@
-Name:           ublue-os-signing
-Packager:       ublue-os
-Vendor:         ublue-os
+Name:           bpbeatty-signing
+Packager:       bpbeatty
+Vendor:         bpbeatty
 Version:        0.1
 Release:        1%{?dist}
 Summary:        Signing files and keys for Universal Blue
 License:        MIT
-URL:            https://github.com/ublue-os/config
+URL:            https://github.com/bpbeatty/config
 
 BuildArch:      noarch
 
-Source0:        ublue-os-signing.tar.gz
+Source0:        bpbeatty-signing.tar.gz
 
-%global sub_name %{lua:t=string.gsub(rpm.expand("%{NAME}"), "^ublue%-os%-", ""); print(t)}
+%global sub_name %{lua:t=string.gsub(rpm.expand("%{NAME}"), "^bpbeatty-", ""); print(t)}
 
 %description
 Adds files and keys for signing Universal Blue images
@@ -30,12 +30,12 @@ tar xf %{SOURCE0} -C %{buildroot} --strip-components=2
 %files
 %dir %attr(0755,root,root) %{_datadir}/%{VENDOR}/%{sub_name}
 %attr(0644,root,root) %{_datadir}/%{VENDOR}/%{sub_name}/%{_exec_prefix}/etc/containers/policy.json
-%attr(0644,root,root) %{_datadir}/%{VENDOR}/%{sub_name}/%{_exec_prefix}/etc/containers/registries.d/ublue-os.yaml
-%attr(0644,root,root) %{_datadir}/%{VENDOR}/%{sub_name}/%{_exec_prefix}/etc/pki/containers/ublue-os.pub
+%attr(0644,root,root) %{_datadir}/%{VENDOR}/%{sub_name}/%{_exec_prefix}/etc/containers/registries.d/bpbeatty.yaml
+%attr(0644,root,root) %{_datadir}/%{VENDOR}/%{sub_name}/%{_exec_prefix}/etc/pki/containers/bpbeatty.pub
 %attr(0644,root,root) %{_exec_prefix}/etc/containers/policy.json
-%attr(0644,root,root) %{_exec_prefix}/etc/containers/registries.d/ublue-os.yaml
-%attr(0644,root,root) %{_exec_prefix}/etc/pki/containers/ublue-os.pub
+%attr(0644,root,root) %{_exec_prefix}/etc/containers/registries.d/bpbeatty.yaml
+%attr(0644,root,root) %{_exec_prefix}/etc/pki/containers/bpbeatty.pub
 
 %changelog
-* Mon Jul 17 2023 RJ Trujillo <eyecantcu@pm.me> - 0.1
+* Sat Jul 22 2023 Brian Beatty <brian@27megahertz.com> - 0.1
 - Add package for signing files and keys
