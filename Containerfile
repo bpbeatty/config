@@ -30,25 +30,31 @@ ADD files/etc/rpm-ostreed.conf /tmp/ublue-os/update-services/etc/rpm-ostreed.con
 ADD files/usr/etc/systemd /tmp/ublue-os/update-services/usr/etc/systemd
 ADD files/usr/lib/systemd /tmp/ublue-os/update-services/usr/lib/systemd
 
-ADD files/usr/etc/containers /tmp/ublue-os/signing/usr/etc/containers
-ADD files/usr/etc/pki /tmp/ublue-os/signing/usr/etc/pki
+ADD files/usr/etc/containers /tmp/bpbeatty/signing/usr/etc/containers
+ADD files/usr/etc/pki /tmp/bpbeatty/signing/usr/etc/pki
 
 RUN tar cf /tmp/ublue-os/rpmbuild/SOURCES/ublue-os-udev-rules.tar.gz -C /tmp ublue-os/udev-rules
 RUN tar cf /tmp/ublue-os/rpmbuild/SOURCES/ublue-os-update-services.tar.gz -C /tmp ublue-os/update-services
-RUN tar cf /tmp/ublue-os/rpmbuild/SOURCES/ublue-os-signing.tar.gz -C /tmp ublue-os/signing
+RUN mkdir -p /tmp/bpbeatty/rpmbuild/SOURCES; \
+    tar cf /tmp/bpbeatty/rpmbuild/SOURCES/bpbeatty-signing.tar.gz -C /tmp bpbeatty/signing
 
-ADD rpmspec/*.spec /tmp/ublue-os
+ADD rpmspec/ublue-*.spec /tmp/ublue-os
+ADD rpmspec/bpbeatty-*.spec /tmp/bpbeatty
 
 RUN rpmbuild -ba \
     --define '_topdir /tmp/ublue-os/rpmbuild' \
     --define '%_tmppath %{_topdir}/tmp' \
     /tmp/ublue-os/*.spec
     
+RUN rpmbuild -ba \
+    --define '_topdir /tmp/bpbeatty/rpmbuild' \
+    --define '%_tmppath %{_topdir}/tmp' \
+    /tmp/bpbeatty/*.spec
 #This can be cleaner and put together with other RPMs in -config, I cant be bothered right now    
 ADD build /tmp/build
 RUN /tmp/build/ublue-os-just/build.sh
 
-RUN mkdir /tmp/ublue-os/{files,rpms}
+RUN mkdir -p /tmp/{bpbeatty,ublue-os}/{files,rpms}
 
 # Dump a file list for each RPM for easier consumption
 RUN \
@@ -59,9 +65,20 @@ RUN \
         cp "${RPM}" "/tmp/ublue-os/rpms/$(rpm -q "${RPM}" --queryformat='%{NAME}.%{ARCH}.rpm')"; \
     done
 
+# Dump a file list for each RPM for easier consumption
+RUN \
+    for RPM in /tmp/bpbeatty/rpmbuild/RPMS/*/*.rpm; do \
+        NAME="$(rpm -q $RPM --queryformat='%{NAME}')"; \
+        mkdir "/tmp/bpbeatty/files/${NAME}"; \
+        rpm2cpio "${RPM}" | cpio -idmv --directory "/tmp/bpbeatty/files/${NAME}"; \
+        cp "${RPM}" "/tmp/bpbeatty/rpms/$(rpm -q "${RPM}" --queryformat='%{NAME}.%{ARCH}.rpm')"; \
+    done
+
 FROM scratch
 
 # Copy build RPMs
 COPY --from=builder /tmp/ublue-os/rpms /rpms
+COPY --from=builder /tmp/bpbeatty/rpms /rpms
 # Copy dumped RPM content
 COPY --from=builder /tmp/ublue-os/files /files
+COPY --from=builder /tmp/bpbeatty/files /files
