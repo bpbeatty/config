@@ -5,7 +5,12 @@ shell := `grep :$(id -u): /etc/passwd | cut -d: -f7`
 
 # Boot into this device's BIOS/UEFI screen
 bios:
-    systemctl reboot --firmware-setup
+    #!/usr/bin/bash
+    if [ -d /sys/firmware/efi ]; then
+      systemctl reboot --firmware-setup
+    else
+      echo "Rebooting to legacy BIOS from OS is not supported."
+    fi
 
 # Show all messages from this boot
 logs-this-boot:
@@ -142,3 +147,9 @@ check-local-overrides:
       --exclude="cdi" \
       --exclude="default.target" \
       /usr/etc /etc 2>/dev/null | sed '/Binary\ files\ /d'
+
+# Gather device info to a pastebin
+device-info:
+    #!/usr/bin/bash
+    echo "Gathering device info..."
+    fpaste <(rpm-ostree status) <(fpaste --sysinfo --printonly)
