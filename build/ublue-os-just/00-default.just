@@ -102,13 +102,13 @@ remove-brew:
 # Toggle display of the user-motd in terminal
 toggle-user-motd:
     #!/usr/bin/bash
-    if test -e "${HOME}/.config/no-show-user-motd"; then
-      rm -f "${HOME}/.config/no-show-user-motd"
+    if test -e "${HOME}/.config/show-user-motd"; then
+      rm -f "${HOME}/.config/show-user-motd"
     else
       if test ! -d "${HOME}/.config"; then
         mkdir "${HOME}/.config"
       fi
-      touch "${HOME}/.config/no-show-user-motd"
+      touch "${HOME}/.config/show-user-motd"
     fi
 
 # Check for local overrides
