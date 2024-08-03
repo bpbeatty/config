@@ -20,21 +20,6 @@ logs-this-boot:
 logs-last-boot:
     sudo journalctl -b -1
 
-# Change the user's shell
-chsh new_shell:
-    #!/usr/bin/bash
-    set -euo pipefail
-    if [ "{{ shell }}" = "{{ new_shell }}" ] ; then
-      printf "Your shell is already set to %s.\n" "{{ new_shell }}"
-    else
-      if [ -x "{{ new_shell }}" ] ; then
-        sudo usermod $USER --shell "{{ new_shell }}"
-        printf "%s's shell is now %s.\n" "$USER" "{{ new_shell }}"
-      else
-        echo "{{ new_shell }} does not exist or is not executable!"
-      fi
-    fi
-
 # Regenerate GRUB config, useful in dual-boot scenarios where a second operating system isn't listed
 regenerate-grub:
     #!/usr/bin/bash
@@ -44,13 +29,13 @@ regenerate-grub:
       sudo grub2-mkconfig -o /etc/grub2.cfg
     fi
 
-# Enroll Nvidia driver & KMOD signing key for secure boot - Enter password "ublue-os" if prompted
+# Enroll Nvidia driver & KMOD signing key for secure boot - Enter password "universalblue" if prompted
 enroll-secure-boot-key:
-    echo 'Enter password "ublue-os" if prompted after your user password.'
+    echo 'Enter password "universalblue" if prompted after your user password.'
     sudo mokutil --timeout -1
     sudo mokutil --import /etc/pki/akmods/certs/akmods-ublue.der
     echo 'When you reboot your computer, follow the instructions to start MOK util'
-    echo 'by pressing a key, then enroll the secure boot key and enter "ublue-os" as the password'
+    echo 'by pressing a key, then enroll the secure boot key and enter "universalblue" as the password'
 
 # Install or uninstall distrobox-git
 setup-distrobox-git:
@@ -116,8 +101,7 @@ check-local-overrides:
 # Gather device info to a pastebin
 device-info:
     #!/usr/bin/bash
-    echo "Gathering device info..."
-    fpaste <(rpm-ostree status) <(fpaste --sysinfo --printonly) <<(flatpak list --columns=application,version,options)
+    fpaste <(rpm-ostree status) <(fpaste --sysinfo --printonly) <(flatpak list --columns=application,version,options)
 
 # Measure Idle Power Draw
 check-idle-power-draw:
