@@ -10,7 +10,7 @@ Add this to your Containerfile to copy the rules over:
 
     COPY --from=ghcr.io/bpbeatty/config:latest /files/ublue-os/udev-rules /
     COPY --from=ghcr.io/bpbeatty/config:latest /files/ublue-os/update-services /
-    
+
 Or if you prefer to install via an RPM package:
 
     COPY --from=ghcr.io/bpbeatty/config:latest /rpms/ublue-os-udev-rules.noarch.rpm /
@@ -62,6 +62,6 @@ These images are signed with sisgstore's [cosign](https://docs.sigstore.dev/cosi
     cosign verify --key cosign.pub ghcr.io/bpbeatty/config
 
 ## Stats
-    
+
 ![Alt](https://repobeats.axiom.co/api/embed/8e36cadc13075a30e15a27a133df8e56389bbfc7.svg "Repobeats analytics image")
 
