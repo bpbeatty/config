@@ -1,7 +1,7 @@
 Name:           bpbeatty-signing
 Packager:       bpbeatty
 Vendor:         bpbeatty
-Version:        0.4
+Version:        0.5
 Release:        1%{?dist}
 Summary:        Signing files and keys for bpbeatty
 License:        MIT
@@ -42,6 +42,9 @@ tar xf %{SOURCE0} -C %{buildroot} --strip-components=2
 %attr(0644,root,root) %{_sysconfdir}/pki/containers/quay.io-toolbx-images.pub
 
 %changelog
+* Fri Jun 06 2025 Brian Beatty <brian@27megahertz.com> - 0.5
+- Removed ublue stuff
+
 * Thu Aug 08 2024 Kyle Gospodnetich <me@kylegospodneti.ch> - 0.4
 - Moved policy.json back to /usr/etc/ temporarily
 
